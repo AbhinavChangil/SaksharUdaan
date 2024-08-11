@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <array name="preloaded_fonts" translatable="false">
+        <item>@font/</item>
+        <item>@font/abhaya_libre</item>
+        <item>@font/acme</item>
+        <item>@font/amethysta</item>
+        <item>@font/arapey</item>
+        <item>@font/arima</item>
+        <item>@font/arima_semibold</item>
+    </array>
+</resources>
