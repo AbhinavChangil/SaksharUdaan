@@ -2,9 +2,44 @@
     <!-- Base application theme. -->
     <style name="Base.Theme.SaksharUdaan" parent="Theme.Material3.DayNight.NoActionBar">
         <!-- Customize your light theme here. -->
-        <item name="android:statusBarColor">#F2E8F6E5</item>
+        <item name="colorPrimary">#308d46</item>
+        <item name="android:statusBarColor">#CEE3D3</item>
         <item name="android:windowLightStatusBar">true</item>
     </style>
 
     <style name="Theme.SaksharUdaan" parent="Base.Theme.SaksharUdaan" />
+
+    <style name="CustomConstraintLayoutStyle">
+        <item name="android:backgroundTint">@color/white</item>
+    </style>
+
+    <style name="tv_color_main">
+        <item name="color">@color/black</item>
+        <item name="android:textColor">@color/black</item>
+    </style>
+
+    <style name="edt_mail">
+        <item name="android:drawableLeft">@drawable/mail_light</item>
+        <item name="android:background">@drawable/white_edittextshape</item>
+        <item name="android:textColor">@color/black</item>
+    </style>
+
+    <style name="edt_lock">
+        <item name="android:drawableLeft">@drawable/lock_light</item>
+        <item name="android:background">@drawable/white_edittextshape</item>
+        <item name="android:textColor">@color/black</item>
+    </style>
+
+    <style name="edt_username">
+        <item name="android:drawableLeft">@drawable/user_light</item>
+        <item name="android:background">@drawable/white_edittextshape</item>
+        <item name="android:textColor">@color/black</item>
+    </style>
+
+    <style name="google_background">
+        <item name="android:background">@drawable/googlebutton_background_light</item>
+        <item name="android:textColor">@color/black</item>
+    </style>
+
+
 </resources>

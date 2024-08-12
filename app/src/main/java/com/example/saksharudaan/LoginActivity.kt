@@ -25,5 +25,9 @@ class LoginActivity : AppCompatActivity() {
         binding.btnLogin.setOnClickListener {
             startActivity(Intent(this,MainActivity::class.java))
         }
+
+        binding.linkForgotPassword.setOnClickListener {
+            startActivity(Intent(this, ForgotPasswordActivity::class.java))
+        }
     }
 }
