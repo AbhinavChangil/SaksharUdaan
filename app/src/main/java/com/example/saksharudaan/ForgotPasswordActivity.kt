@@ -18,6 +18,7 @@ class ForgotPasswordActivity : AppCompatActivity() {
     private lateinit var auth: FirebaseAuth
     private lateinit var loadingDialog: Dialog
 
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivityForgotPasswordBinding.inflate(layoutInflater)
@@ -41,6 +42,7 @@ class ForgotPasswordActivity : AppCompatActivity() {
             }
         }
     }
+
 
     private fun sendPasswordResetEmail(email: String) {
         auth.sendPasswordResetEmail(email)
