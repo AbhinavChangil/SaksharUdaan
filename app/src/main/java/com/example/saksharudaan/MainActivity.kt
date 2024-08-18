@@ -1,5 +1,6 @@
 package com.example.saksharudaan
 
+import android.content.Intent
 import android.os.Bundle
 import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
@@ -28,7 +29,7 @@ class MainActivity : AppCompatActivity() {
 
         //Initialize with home fragment
         binding.bottomNavBar.setItemSelected(R.id.home,true)
-        binding.tvToolbarTilte.text = "Home"
+        binding.tvToolbarTilte.text = "SaksharUdaan"
         supportFragmentManager.beginTransaction().replace(R.id.container_main_ll, HomeFragment()).commit()
 
         // Set up the ChipNavigationBar
@@ -41,11 +42,15 @@ class MainActivity : AppCompatActivity() {
             var selectedFragment: Fragment? = null
             when (itemId) {
                 R.id.home -> { selectedFragment = HomeFragment()
-                binding.tvToolbarTilte.text = "Home" }
+                binding.tvToolbarTilte.text = "SaksharUdaan"
+                }
                 R.id.profile -> {
                     selectedFragment = ProfileFragment()
                     binding.tvToolbarTilte.text = "Profile"
                 }
+//                R.id.add -> {
+//                    startActivity(Intent(this, LoginActivity::class.java))
+//                }
             }
             if (selectedFragment != null) {
                 supportFragmentManager.beginTransaction().replace(R.id.container_main_ll, selectedFragment).commit()

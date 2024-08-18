@@ -10,7 +10,7 @@
     <style name="MainActivityTheme" parent="Theme.Material3.DayNight.NoActionBar">
         <!-- Customize your light theme here. -->
         <item name="colorPrimary">#308d46</item>
-        <item name="android:statusBarColor">#D8D8D8</item>
+        <item name="android:statusBarColor">#F6FBF8</item>
         <item name="android:windowLightStatusBar">true</item>
     </style>
 
@@ -21,7 +21,7 @@
     </style>
 
     <style name="main_contraint_in">
-        <item name="android:background">@color/white</item>
+        <item name="android:background">#F6FBF8</item>
     </style>
 
     <style name="tv_color_main">
@@ -54,12 +54,12 @@
 
     <style name="bottom_navigation_bar">
         <item name="cnb_menuResource">@menu/bottom_menu</item>
-        <item name="android:background">#D8D8D8</item>
+        <item name="android:backgroundTint">#CEE3D3</item>
         <item name="android:iconTint" tools:targetApi="o">#000000</item>
     </style>
 
     <style name="toolbar_main">
-        <item name="android:background">#D8D8D8</item>
+        <item name="android:backgroundTint">#CEE3D3</item>
     </style>
 
 
