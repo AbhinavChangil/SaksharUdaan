@@ -5,16 +5,52 @@ import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
+import androidx.core.view.updatePadding
+import androidx.fragment.app.Fragment
+import androidx.navigation.NavController
+import androidx.navigation.findNavController
+import androidx.navigation.ui.setupWithNavController
+import com.example.saksharudaan.databinding.ActivityMainBinding
+import com.example.saksharudaan.fragment.HomeFragment
+import com.example.saksharudaan.fragment.ProfileFragment
+import com.google.android.material.bottomnavigation.BottomNavigationView
+import com.ismaeldivita.chipnavigation.ChipNavigationBar
 
 class MainActivity : AppCompatActivity() {
+    private val binding: ActivityMainBinding by lazy {
+        ActivityMainBinding.inflate(layoutInflater)
+    }
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        enableEdgeToEdge()
-        setContentView(R.layout.activity_main)
-        ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main)) { v, insets ->
-            val systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars())
-            v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom)
-            insets
+//        enableEdgeToEdge()
+        setContentView(binding.root)
+
+        //Initialize with home fragment
+        binding.bottomNavBar.setItemSelected(R.id.home,true)
+        binding.tvToolbarTilte.text = "Home"
+        supportFragmentManager.beginTransaction().replace(R.id.container_main_ll, HomeFragment()).commit()
+
+        // Set up the ChipNavigationBar
+        setupChipNavigationBar()
+
+    }
+
+    private fun setupChipNavigationBar() {
+        binding.bottomNavBar.setOnItemSelectedListener { itemId ->
+            var selectedFragment: Fragment? = null
+            when (itemId) {
+                R.id.home -> { selectedFragment = HomeFragment()
+                binding.tvToolbarTilte.text = "Home" }
+                R.id.profile -> {
+                    selectedFragment = ProfileFragment()
+                    binding.tvToolbarTilte.text = "Profile"
+                }
+            }
+            if (selectedFragment != null) {
+                supportFragmentManager.beginTransaction().replace(R.id.container_main_ll, selectedFragment).commit()
+            }
         }
     }
 }
+
