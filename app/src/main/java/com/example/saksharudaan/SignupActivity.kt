@@ -7,7 +7,6 @@ import android.graphics.drawable.ColorDrawable
 import android.os.Bundle
 import android.util.Log
 import android.widget.Toast
-import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
 import com.example.saksharudaan.databinding.ActivitySignupBinding
 import com.example.saksharudaan.model.UserModel
@@ -19,6 +18,11 @@ class SignupActivity : AppCompatActivity() {
     private val binding: ActivitySignupBinding by lazy {
         ActivitySignupBinding.inflate(layoutInflater)
     }
+    private var imageUri: String? = ""
+    private var profileHeadline: String? = ""
+    private var gender: String? = ""
+    private var phone: String? = ""
+    private var state: String? = ""
 
     private lateinit var auth: FirebaseAuth
     private lateinit var database: FirebaseDatabase
@@ -68,7 +72,7 @@ class SignupActivity : AppCompatActivity() {
             if (task.isSuccessful) {
                 auth.currentUser?.sendEmailVerification()?.addOnCompleteListener { verifyTask ->
                     if (verifyTask.isSuccessful) {
-                        saveUserData(name, email, password)
+                        saveUserData(name, email, password, imageUri, profileHeadline, gender, phone, state)
                         showToast("Account created successfully, please verify your email id")
                         loadingDialog.dismiss()
                         onBackPressed()
@@ -86,8 +90,17 @@ class SignupActivity : AppCompatActivity() {
         }
     }
 
-    private fun saveUserData(name: String, email: String, password: String) {
-        val user = UserModel(name, email, password)
+    private fun saveUserData(
+        name: String,
+        email: String,
+        password: String,
+        imageUri: String?,
+        profileHeadline: String?,
+        gender: String?,
+        phone: String?,
+        state: String?
+    ) {
+        val user = UserModel(name, email, password, imageUri, profileHeadline, gender, phone, state)
         val userId = auth.currentUser!!.uid
         val databaseRef = database.getReference("user/$userId/profile")
         databaseRef.setValue(user)

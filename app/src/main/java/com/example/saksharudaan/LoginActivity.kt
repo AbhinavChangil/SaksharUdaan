@@ -8,12 +8,8 @@ import android.graphics.drawable.ColorDrawable
 import android.os.Bundle
 import android.util.Log
 import android.widget.Toast
-import androidx.activity.enableEdgeToEdge
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AppCompatActivity
-import androidx.core.view.ViewCompat
-import androidx.core.view.WindowInsetsCompat
-import androidx.core.view.updatePadding
 import com.example.saksharudaan.databinding.ActivityLoginBinding
 import com.example.saksharudaan.model.UserModel
 import com.google.android.gms.auth.api.signin.GoogleSignIn
@@ -105,8 +101,7 @@ class LoginActivity : AppCompatActivity() {
                         val user: FirebaseUser? = auth.currentUser
                         val googleName = user?.displayName.toString()
                         val googleEmail = user?.email.toString()
-                        val password = ""
-                        saveUserData(googleName, googleEmail, password)
+                        saveUserData(googleName, googleEmail)
                         showToast("Google Sign-in Successful!")
                         updateUIOnSuccess()
                     } else {
@@ -124,12 +119,31 @@ class LoginActivity : AppCompatActivity() {
         }
     }
 
-    private fun saveUserData(name: String, email: String, password: String) {
-        val user = UserModel(name, email, password)
+    private fun saveUserData(name: String, email: String) {
         val userId = auth.currentUser!!.uid
         val databaseRef = database.getReference("user/$userId/profile")
-        databaseRef.setValue(user)
+
+        // Check if user data already exists
+        databaseRef.get().addOnSuccessListener { dataSnapshot ->
+            if (!dataSnapshot.exists()) {
+                // Data does not exist, so save the user data
+                val user = UserModel(name, email)
+                databaseRef.setValue(user).addOnCompleteListener { task ->
+                    if (task.isSuccessful) {
+                        Log.d("Database", "User data saved successfully.")
+                    } else {
+                        Log.d("Database", "Failed to save user data: ${task.exception}")
+                    }
+                }
+            } else {
+                // Data exists, skip saving
+                Log.d("Database", "User data already exists, skipping save.")
+            }
+        }.addOnFailureListener { exception ->
+            Log.d("Database", "Error checking user data: $exception")
+        }
     }
+
 
     private fun login(email: String, password: String) {
         auth.signInWithEmailAndPassword(email, password).addOnCompleteListener { task ->

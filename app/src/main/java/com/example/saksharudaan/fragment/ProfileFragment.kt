@@ -13,6 +13,7 @@ import android.view.ViewGroup
 import android.widget.Toast
 import com.bumptech.glide.Glide
 import com.example.saksharudaan.EditProfileActivity
+import com.example.saksharudaan.LoginActivity
 import com.example.saksharudaan.R
 import com.example.saksharudaan.databinding.FragmentProfileBinding
 import com.example.saksharudaan.model.UserModel
@@ -28,7 +29,7 @@ class ProfileFragment : Fragment() {
     private lateinit var auth: FirebaseAuth
     private lateinit var database: FirebaseDatabase
     private lateinit var dialog: Dialog
-    private lateinit var profileImageUri: String
+    private var profileImageUri: String? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -62,9 +63,40 @@ class ProfileFragment : Fragment() {
             startActivity(Intent(requireContext(), EditProfileActivity::class.java))
         }
 
+        binding.cvAboutUs.setOnClickListener {
+            startActivity(Intent(Intent.ACTION_VIEW, Uri.parse("https://abhinavchangil.github.io/saksharUdaan-links/AboutUs.html")))
+        }
+
+        binding.cvLegalPolicy.setOnClickListener {
+            startActivity(Intent(Intent.ACTION_VIEW, Uri.parse("https://abhinavchangil.github.io/saksharUdaan-links/PrivacyPolicy.html")))
+        }
+
+        binding.cvShare.setOnClickListener {
+
+            // Create an Intent to share text
+            val shareIntent = Intent().apply {
+                action = Intent.ACTION_SEND
+                putExtra(Intent.EXTRA_TEXT, "Check out my profile at: https://www.linkedin.com/in/abhinavchangil/")
+                type = "text/plain"
+            }
+
+            // Start the sharing activity
+            startActivity(Intent.createChooser(shareIntent, "Share via"))
+        }
+
+
+        binding.cvLogout.setOnClickListener {
+            auth.signOut()
+            val intent = Intent(requireContext(),LoginActivity::class.java)
+            intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP)
+            startActivity(intent)
+        }
+
 
         return binding.root
     }
+
+
 
     private fun setUserData() {
         val user = auth.currentUser
@@ -83,13 +115,13 @@ class ProfileFragment : Fragment() {
                                 tvEmailProfile.text = userProfile.email
                                 profileImageUri = userProfile.imageUri.toString()
                                 dialog.dismiss()
-                                if(profileImageUri!=""){
+                                if(profileImageUri=="" || profileImageUri==null){
+                                    imgProfile.setImageResource(R.drawable.ic_profile_img_foreground)
+                                }else{
                                     val uri = Uri.parse(userProfile.imageUri)
                                     Glide.with(requireContext())
                                         .load(uri)
                                         .into(imgProfile)
-                                }else{
-                                    imgProfile.setImageResource(R.drawable.ic_profile_img_foreground)
                                 }
                             }
                         }
@@ -105,7 +137,7 @@ class ProfileFragment : Fragment() {
 
 
     private fun showToast(message: String) {
-        Toast.makeText(requireContext(), message, Toast.LENGTH_SHORT).show()
+        Toast.makeText(context, message, Toast.LENGTH_SHORT).show()
     }
 
 }
