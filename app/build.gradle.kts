@@ -60,4 +60,8 @@ dependencies {
 
 
     implementation("org.jetbrains.kotlin:kotlin-stdlib:1.9.22")
+
+
+    //glide dependency for loading image
+    implementation("com.github.bumptech.glide:glide:4.16.0")
 }

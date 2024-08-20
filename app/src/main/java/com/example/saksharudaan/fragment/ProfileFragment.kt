@@ -1,33 +1,37 @@
 package com.example.saksharudaan.fragment
 
+import android.app.Dialog
+import android.content.Intent
+import android.graphics.Color
+import android.graphics.drawable.ColorDrawable
+import android.net.Uri
 import android.os.Bundle
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Toast
+import com.bumptech.glide.Glide
+import com.example.saksharudaan.EditProfileActivity
 import com.example.saksharudaan.R
+import com.example.saksharudaan.databinding.FragmentProfileBinding
+import com.example.saksharudaan.model.UserModel
+import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.auth.auth
+import com.google.firebase.database.DataSnapshot
+import com.google.firebase.database.DatabaseError
+import com.google.firebase.database.FirebaseDatabase
+import com.google.firebase.database.ValueEventListener
 
-// TODO: Rename parameter arguments, choose names that match
-// the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
-private const val ARG_PARAM1 = "param1"
-private const val ARG_PARAM2 = "param2"
-
-/**
- * A simple [Fragment] subclass.
- * Use the [ProfileFragment.newInstance] factory method to
- * create an instance of this fragment.
- */
 class ProfileFragment : Fragment() {
-    // TODO: Rename and change types of parameters
-    private var param1: String? = null
-    private var param2: String? = null
+    private lateinit var binding: FragmentProfileBinding
+    private lateinit var auth: FirebaseAuth
+    private lateinit var database: FirebaseDatabase
+    private lateinit var dialog: Dialog
+    private lateinit var profileImageUri: String
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        arguments?.let {
-            param1 = it.getString(ARG_PARAM1)
-            param2 = it.getString(ARG_PARAM2)
-        }
     }
 
     override fun onCreateView(
@@ -35,26 +39,73 @@ class ProfileFragment : Fragment() {
         savedInstanceState: Bundle?
     ): View? {
         // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_profile, container, false)
+        binding = FragmentProfileBinding.inflate(inflater, container, false)
+
+        //initialize auth and database variables
+        auth = FirebaseAuth.getInstance()
+        database = FirebaseDatabase.getInstance()
+
+        // Initialize loading dialog
+        dialog = Dialog(requireContext()).apply {
+            setContentView(R.layout.loading_dialog)
+            window?.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
+            setCancelable(false)
+        }
+        dialog.show()
+
+
+        //update profile name, image and email
+        setUserData()
+
+        //edit profile
+        binding.cvEditProfile.setOnClickListener {
+            startActivity(Intent(requireContext(), EditProfileActivity::class.java))
+        }
+
+
+        return binding.root
     }
 
-    companion object {
-        /**
-         * Use this factory method to create a new instance of
-         * this fragment using the provided parameters.
-         *
-         * @param param1 Parameter 1.
-         * @param param2 Parameter 2.
-         * @return A new instance of fragment ProfileFragment.
-         */
-        // TODO: Rename and change types and number of parameters
-        @JvmStatic
-        fun newInstance(param1: String, param2: String) =
-            ProfileFragment().apply {
-                arguments = Bundle().apply {
-                    putString(ARG_PARAM1, param1)
-                    putString(ARG_PARAM2, param2)
+    private fun setUserData() {
+        val user = auth.currentUser
+        if (user != null) {
+            val userId = auth.currentUser?.uid?:""
+            val userReference = database.getReference("user").child(userId).child("profile")
+
+            // Set all values
+            userReference.addValueEventListener(object : ValueEventListener {
+                override fun onDataChange(snapshot: DataSnapshot) {
+                    if (snapshot.exists()) {
+                        val userProfile = snapshot.getValue(UserModel::class.java)
+                        if (userProfile != null) {
+                            binding.apply {
+                                tvNameProfile.text = userProfile.name
+                                tvEmailProfile.text = userProfile.email
+                                profileImageUri = userProfile.imageUri.toString()
+                                dialog.dismiss()
+                                if(profileImageUri!=""){
+                                    val uri = Uri.parse(userProfile.imageUri)
+                                    Glide.with(requireContext())
+                                        .load(uri)
+                                        .into(imgProfile)
+                                }else{
+                                    imgProfile.setImageResource(R.drawable.ic_profile_img_foreground)
+                                }
+                            }
+                        }
+                    }
                 }
-            }
+
+                override fun onCancelled(error: DatabaseError) {
+                    showToast("Failed to load user data")
+                }
+            })
+        }
     }
+
+
+    private fun showToast(message: String) {
+        Toast.makeText(requireContext(), message, Toast.LENGTH_SHORT).show()
+    }
+
 }

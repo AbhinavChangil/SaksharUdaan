@@ -1,7 +1,8 @@
 package com.example.saksharudaan.model
 
 data class UserModel(
-    var name: String,
-    var email: String,
-    var password: String
+    val name: String? = null,
+    val email: String? = null,
+    val password: String? = null,
+    val imageUri: String? = null,
 )

@@ -151,6 +151,15 @@ class LoginActivity : AppCompatActivity() {
         }
     }
 
+
+    override fun onStart() {
+        super.onStart()
+        val currentUser = auth.currentUser
+        if (currentUser != null) {
+            updateUIOnSuccess()
+        }
+    }
+
     private fun updateUIOnSuccess() {
         val intent = Intent(this, MainActivity::class.java)
         startActivity(intent)
@@ -160,8 +169,8 @@ class LoginActivity : AppCompatActivity() {
 
     private fun updateUIOnFailure() {
         loadingDialog.dismiss()
-        binding.edtEmail.text.clear()
-        binding.edtPassword.text.clear()
+        binding.edtEmail.text?.clear()
+        binding.edtPassword.text?.clear()
         binding.edtEmail.error = "Wrong Credentials"
         binding.edtPassword.error = "Wrong Credentials"
     }

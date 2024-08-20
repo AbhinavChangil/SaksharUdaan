@@ -94,10 +94,10 @@ class SignupActivity : AppCompatActivity() {
     }
 
     private fun updateUIOnFailure() {
-        binding.edtEmail.text.clear()
-        binding.edtPassword.text.clear()
-        binding.edtPassword2.text.clear()
-        binding.edtName.text.clear()
+        binding.edtEmail.text?.clear()
+        binding.edtPassword.text?.clear()
+        binding.edtPassword2.text?.clear()
+        binding.edtName.text?.clear()
     }
 
     private fun showToast(message: String) {

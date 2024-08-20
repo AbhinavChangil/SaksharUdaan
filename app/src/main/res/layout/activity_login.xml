@@ -79,38 +79,44 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
 
-    <EditText
-        android:id="@+id/edt_email"
-        android:layout_width="360dp"
-        android:layout_height="55dp"
-        android:layout_marginTop="40dp"
-        style="@style/edt_mail"
-        android:drawablePadding="10dp"
-        android:hint="Email"
-        android:inputType="textEmailAddress"
-        android:paddingLeft="10dp"
-        android:textColorHint="#888A89"
-        android:textSize="16sp"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/tv_login" />
+        <com.google.android.material.textfield.TextInputLayout
+            android:id="@+id/edt_email1"
+            android:layout_width="360dp"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="20dp"
+            android:hint="Email"
+            android:shadowColor="#6E6C6C"
+            android:textColorHint="#888A89"
+            android:textSize="16sp"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/tv_login"  >
+            <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/edt_email"
+                android:inputType="textEmailAddress"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"/>
+        </com.google.android.material.textfield.TextInputLayout>
 
-    <EditText
-        android:id="@+id/edt_password"
-        android:layout_width="360dp"
-        android:layout_height="55dp"
-        android:layout_marginTop="20dp"
-        style="@style/edt_lock"
-        android:hint="Password"
-        android:drawablePadding="10dp"
-        android:inputType="textPassword"
-        android:outlineAmbientShadowColor="@color/black"
-        android:paddingLeft="10dp"
-        android:textColorHint="#888A89"
-        android:textSize="16sp"
-        app:layout_constraintLeft_toLeftOf="@+id/edt_email"
-        app:layout_constraintRight_toRightOf="@+id/edt_email"
-        app:layout_constraintTop_toBottomOf="@+id/edt_email" />
+        <com.google.android.material.textfield.TextInputLayout
+            android:id="@+id/edt_password1"
+            android:layout_width="360dp"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="20dp"
+            android:hint="Password"
+            android:outlineAmbientShadowColor="@color/black"
+            android:textColorHint="#888A89"
+            android:shadowColor="#6E6C6C"
+            android:textSize="16sp"
+            app:layout_constraintLeft_toLeftOf="@+id/edt_email1"
+            app:layout_constraintRight_toRightOf="@+id/edt_email1"
+            app:layout_constraintTop_toBottomOf="@+id/edt_email1">
+            <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/edt_password"
+                android:inputType="textPassword"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"/>
+        </com.google.android.material.textfield.TextInputLayout>
 
     <TextView
         android:id="@+id/link_forgot_password"
@@ -122,8 +128,8 @@
         android:textAlignment="center"
         android:textColor="#079715"
         android:textSize="17dp"
-        app:layout_constraintEnd_toEndOf="@id/edt_password"
-        app:layout_constraintTop_toBottomOf="@+id/edt_password" />
+        app:layout_constraintEnd_toEndOf="@id/edt_password1"
+        app:layout_constraintTop_toBottomOf="@+id/edt_password1" />
 
         <androidx.appcompat.widget.AppCompatButton
             android:id="@+id/btn_login"
@@ -142,8 +148,8 @@
             android:textSize="20sp"
             android:textStyle="bold"
             app:cornerRadius="10dp"
-            app:layout_constraintEnd_toEndOf="@id/edt_password"
-            app:layout_constraintStart_toStartOf="@+id/edt_password"
+            app:layout_constraintEnd_toEndOf="@id/edt_password1"
+            app:layout_constraintStart_toStartOf="@+id/edt_password1"
             app:layout_constraintTop_toBottomOf="@+id/link_forgot_password" />
 
 
@@ -207,8 +213,8 @@
             style="@style/google_background"
             android:textSize="17sp"
             android:textStyle="bold"
-            app:layout_constraintEnd_toEndOf="@id/edt_password"
-            app:layout_constraintStart_toStartOf="@id/edt_password"
+            app:layout_constraintEnd_toEndOf="@id/edt_password1"
+            app:layout_constraintStart_toStartOf="@id/edt_password1"
             app:layout_constraintTop_toBottomOf="@id/linear_layout_or"
             tools:ignore="RtlCompat" />
 
@@ -248,8 +254,8 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             app:layout_constraintTop_toBottomOf="@+id/tv_login4"
-            app:layout_constraintStart_toStartOf="@id/edt_password"
-            app:layout_constraintEnd_toEndOf="@id/edt_password"
+            app:layout_constraintStart_toStartOf="@id/edt_password1"
+            app:layout_constraintEnd_toEndOf="@id/edt_password1"
             app:layout_constraintBottom_toBottomOf="parent"
             android:text="By creating this account, you agree to our "
             style="@style/tv_color_main"
