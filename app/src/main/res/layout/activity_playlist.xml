@@ -14,10 +14,17 @@
         android:layout_height="250dp"
         app:layout_constraintTop_toTopOf="parent">
 
-        <com.example.saksharudaan.FullScreenVideoView
-            android:id="@+id/video"
+        <com.google.android.exoplayer2.ui.PlayerView
+            android:id="@+id/video_player"
+            app:surface_type="surface_view"
+            app:hide_on_touch="true"
+            app:played_color="@color/white"
+            app:shutter_background_color="@color/black"
+            app:use_controller="true"
+            app:fastforward_increment="10000"
+            app:auto_show="true"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"/>
+            android:layout_height="match_parent" />
 
     </androidx.cardview.widget.CardView>
 
@@ -195,11 +202,13 @@
         style="@style/main_contraint_in">
 
         <TextView
+            android:id="@+id/tv_course_description"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:text="Description of the course!"
             android:padding="10dp"
             android:textSize="17sp"
+            android:inputType="textShortMessage"
             style="@style/tv_color_main"
             android:fontFamily="@font/arima"/>
 

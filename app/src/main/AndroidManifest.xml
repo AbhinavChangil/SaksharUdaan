@@ -17,7 +17,8 @@
         <activity
             android:name=".PlaylistActivity"
             android:exported="false"
-            android:theme="@style/EditProfileTheme"/>
+            android:theme="@style/EditProfileTheme"
+            android:configChanges="keyboardHidden|orientation|screenSize"/>
         <activity
             android:name=".EditProfileActivity"
             android:exported="false"

@@ -25,6 +25,7 @@ class CourseAdapter(
 ) : RecyclerView.Adapter<CourseAdapter.CourseViewHolder>() {
     val database = FirebaseDatabase.getInstance()
     val auth = FirebaseAuth.getInstance()
+    private lateinit var instructorName: String
 
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): CourseViewHolder {
@@ -36,13 +37,18 @@ class CourseAdapter(
     override fun getItemCount(): Int = courseList.size
 
     override fun onBindViewHolder(holder: CourseViewHolder, position: Int) {
+
         holder.bind(position)
         holder.itemView.setOnClickListener{
             val courseItem = courseList[position]
             val intent = Intent(context, PlaylistActivity::class.java)
             intent.putExtra("postId",courseItem.postId)
             intent.putExtra("courseTitle",courseItem.courseTitle)
-            intent.putExtra("postedBy",courseItem.postedBy)
+            intent.putExtra("postedBy",instructorName)
+            intent.putExtra("coursePrice",courseItem.coursePrice)
+            intent.putExtra("courseDuration",courseItem.courseDuration)
+            intent.putExtra("courseDescription",courseItem.courseDescription)
+            intent.putExtra("introVideoUrl",courseItem.courseVideoUrl)
             context.startActivity(intent)
         }
     }
@@ -68,6 +74,7 @@ class CourseAdapter(
                                 user?.let {
                                     Glide.with(context).load(Uri.parse(it.imageUri)).into(imgProfile)
                                     binding.tvInstructorName.text = it.name
+                                    instructorName = it.name.toString()
                                 }
                             }
 

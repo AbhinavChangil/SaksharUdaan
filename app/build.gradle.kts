@@ -65,6 +65,10 @@ dependencies {
     //glide dependency for loading image
     implementation("com.github.bumptech.glide:glide:4.16.0")
 
-    //label switch button
-//    implementation("com.github.jaycee88:Android-Toggle-Switch:1.2.3.1")
+    //Exoplayer for video player
+    implementation("com.google.android.exoplayer:exoplayer:2.14.1")
+    implementation("com.google.android.exoplayer:exoplayer-dash:2.14.1")
+    implementation("com.google.android.exoplayer:exoplayer-smoothstreaming:2.14.1")
+    implementation("com.github.norulab:android-exoplayer-fullscreen:1.2.1")
+    implementation("com.google.android.exoplayer:exoplayer-ui:2.14.1")
 }
