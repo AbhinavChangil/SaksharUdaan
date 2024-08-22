@@ -78,7 +78,7 @@ class HomeFragment : Fragment() {
                 courseList.shuffle()
 
                 // Get a sublist with the first 2 items or the full list if it has less than 2 items
-                val randomCourses = if (courseList.size > 1) courseList.subList(0, 1) else courseList
+                val randomCourses = if (courseList.size > 6) courseList.subList(0, 6) else courseList
 
                 setAdapter(randomCourses)
                 loadingDialog.dismiss()

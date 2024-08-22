@@ -64,4 +64,7 @@ dependencies {
 
     //glide dependency for loading image
     implementation("com.github.bumptech.glide:glide:4.16.0")
+
+    //label switch button
+//    implementation("com.github.jaycee88:Android-Toggle-Switch:1.2.3.1")
 }

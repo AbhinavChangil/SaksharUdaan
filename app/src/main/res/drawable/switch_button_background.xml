@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<selector xmlns:android="http://schemas.android.com/apk/res/android">
+    <!-- State when the button is selected (or active) -->
+    <item android:state_pressed="true">
+        <shape android:shape="rectangle">
+            <solid android:color="#308d46" /> <!-- Green background when pressed -->
+            <corners android:radius="25dp"/>
+        </shape>
+    </item>
+    <!-- State when the button is not selected -->
+    <item android:state_enabled="false">
+        <shape android:shape="rectangle">
+            <solid android:color="#CEE3D3"/> <!-- Light green background for default state -->
+            <corners android:radius="25dp"/>
+        </shape>
+    </item>
+    <!-- State when the button is disabled -->
+    <item android:state_enabled="false">
+        <shape android:shape="rectangle">
+            <solid android:color="#CEE3D3"/> <!-- Gray background when disabled -->
+            <corners android:radius="25dp"/>
+        </shape>
+    </item>
+</selector>

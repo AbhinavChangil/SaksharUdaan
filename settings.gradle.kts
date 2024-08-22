@@ -24,6 +24,7 @@ dependencyResolutionManagement {
     }
 }
 
+
 rootProject.name = "SaksharUdaan"
 include(":app")
  

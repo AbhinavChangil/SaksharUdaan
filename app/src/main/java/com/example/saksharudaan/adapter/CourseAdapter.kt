@@ -9,6 +9,7 @@ import android.widget.Toast
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.example.saksharudaan.EditProfileActivity
+import com.example.saksharudaan.PlaylistActivity
 import com.example.saksharudaan.databinding.HomeRvItemBinding
 import com.example.saksharudaan.model.UserModel
 import com.example.saksharudaan.model.CourseModel
@@ -38,9 +39,10 @@ class CourseAdapter(
         holder.bind(position)
         holder.itemView.setOnClickListener{
             val courseItem = courseList[position]
-            val intent = Intent(context, EditProfileActivity::class.java)
+            val intent = Intent(context, PlaylistActivity::class.java)
             intent.putExtra("postId",courseItem.postId)
             intent.putExtra("courseTitle",courseItem.courseTitle)
+            intent.putExtra("postedBy",courseItem.postedBy)
             context.startActivity(intent)
         }
     }

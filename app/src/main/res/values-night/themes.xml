@@ -53,7 +53,7 @@
         <!-- Customize your light theme here. -->
         <item name="colorPrimary">#308d46</item>
         <item name="android:statusBarColor">#152529</item>
-        <item name="android:windowLightStatusBar">true</item>
+        <item name="android:windowLightStatusBar">false</item>
     </style>
 
 </resources>
