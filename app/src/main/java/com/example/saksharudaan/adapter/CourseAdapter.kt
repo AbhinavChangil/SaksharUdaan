@@ -3,9 +3,12 @@ package com.example.saksharudaan.Adapter
 import android.content.Context
 import android.content.Intent
 import android.net.Uri
+import android.util.AttributeSet
 import android.view.LayoutInflater
+import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
+import android.widget.VideoView
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.example.saksharudaan.EditProfileActivity
@@ -86,5 +89,14 @@ class CourseAdapter(
             }
         }
 
+    }
+}
+
+class FullScreenVideoView(context: Context, attrs: AttributeSet) : VideoView(context, attrs) {
+
+    override fun onMeasure(widthMeasureSpec: Int, heightMeasureSpec: Int) {
+        val width = View.MeasureSpec.getSize(widthMeasureSpec)
+        val height = View.MeasureSpec.getSize(heightMeasureSpec)
+        setMeasuredDimension(width, height)
     }
 }

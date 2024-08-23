@@ -69,6 +69,9 @@ dependencies {
     implementation("com.google.android.exoplayer:exoplayer:2.14.1")
     implementation("com.google.android.exoplayer:exoplayer-dash:2.14.1")
     implementation("com.google.android.exoplayer:exoplayer-smoothstreaming:2.14.1")
+    implementation("com.google.android.exoplayer:exoplayer-core:2.14.1")
     implementation("com.github.norulab:android-exoplayer-fullscreen:1.2.1")
     implementation("com.google.android.exoplayer:exoplayer-ui:2.14.1")
+
+
 }

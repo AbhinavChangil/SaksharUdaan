@@ -1,30 +1,26 @@
 package com.example.saksharudaan
 
-import android.content.Context
+import android.content.pm.ActivityInfo
+import android.content.res.Configuration
 import android.os.Bundle
-import android.util.AttributeSet
+import android.os.Handler
+import android.os.Looper
+import android.view.MotionEvent
 import android.view.View
-import android.widget.SimpleAdapter
+import android.view.ViewGroup
 import android.widget.Toast
-import android.widget.VideoView
-import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
-import androidx.core.view.ViewCompat
-import androidx.core.view.WindowInsetsCompat
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.saksharudaan.databinding.ActivityPlaylistBinding
 import com.example.saksharudaan.model.PlaylistModel
 import com.example.saksharudaanadmin.adapter.PlaylistAdapter
-import com.google.android.exoplayer2.ExoPlayer
 import com.google.android.exoplayer2.MediaItem
 import com.google.android.exoplayer2.SimpleExoPlayer
-import com.google.android.exoplayer2.ui.PlayerView
+import com.google.android.exoplayer2.ui.StyledPlayerView
 import com.google.firebase.database.DataSnapshot
 import com.google.firebase.database.DatabaseError
 import com.google.firebase.database.FirebaseDatabase
 import com.google.firebase.database.ValueEventListener
-import com.google.firebase.database.collection.LLRBNode.Color
-import com.norulab.exofullscreen.preparePlayer
 
 class PlaylistActivity : AppCompatActivity() {
     private val binding: ActivityPlaylistBinding by lazy {
@@ -35,15 +31,21 @@ class PlaylistActivity : AppCompatActivity() {
     private lateinit var database: FirebaseDatabase
     private lateinit var playlistAdapter: PlaylistAdapter
 
+    private var isFullscreen = false
+    private var originalLayoutParams: ViewGroup.LayoutParams? = null
+    private val handler = Handler(Looper.getMainLooper())
+    private val hideFullscreenButtonRunnable = Runnable {
+        binding.btnFullscreen.visibility = View.GONE
+    }
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-//        enableEdgeToEdge()
         setContentView(binding.root)
 
-        //initialize database
+        // Initialize database
         database = FirebaseDatabase.getInstance()
 
-        handelSwitchButton()
+        handleSwitchButton()
 
         val postId = intent.getStringExtra("postId")
         val courseTitle = intent.getStringExtra("courseTitle")
@@ -61,17 +63,56 @@ class PlaylistActivity : AppCompatActivity() {
             tvCourseDescription.text = courseDescription
         }
 
-
         playIntroVideo(introVideoUrl.toString())
-
-
         retrievePlaylistAndSetAdapter()
+
+
+        binding.btnFullscreen.setOnClickListener {
+            toggleFullscreen()
+        }
+
+
+
 
     }
 
-    private fun handelSwitchButton() {
+    private fun toggleFullscreen() {
+        if (isFullscreen) {
+            // Exit fullscreen
+            requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_PORTRAIT
 
-        //by default playlist button and recycler view playlist is visible
+            // Restore original layout params
+            if (originalLayoutParams != null) {
+                binding.videoPlayer.layoutParams = originalLayoutParams
+            }
+
+            // Set the icon for fullscreen mode
+            binding.btnFullscreen.setImageResource(R.drawable.ic_fullscreen)
+        } else {
+            // Enter fullscreen
+            requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE
+
+            // Save original layout params
+            if (originalLayoutParams == null) {
+                originalLayoutParams = binding.videoPlayer.layoutParams
+            }
+
+            // Set layout params for fullscreen
+            binding.videoPlayer.layoutParams = ViewGroup.LayoutParams(
+                ViewGroup.LayoutParams.MATCH_PARENT,
+                ViewGroup.LayoutParams.MATCH_PARENT
+            )
+
+            // Set the icon for exit fullscreen mode
+            binding.btnFullscreen.setImageResource(R.drawable.ic_fullscreen_exit)
+        }
+        isFullscreen = !isFullscreen
+        binding.videoPlayer.requestLayout()
+
+    }
+
+    private fun handleSwitchButton() {
+        // By default, playlist button and recycler view playlist are visible
         binding.rvPlaylist.visibility = View.VISIBLE
         binding.btnDescription.visibility = View.INVISIBLE
         binding.cvDescription.visibility = View.GONE
@@ -84,7 +125,6 @@ class PlaylistActivity : AppCompatActivity() {
             binding.btnDescription.visibility = View.INVISIBLE
         }
 
-
         binding.tvDescriptionBtn.setOnClickListener {
             binding.rvPlaylist.visibility = View.GONE
             binding.cvDescription.visibility = View.VISIBLE
@@ -93,7 +133,6 @@ class PlaylistActivity : AppCompatActivity() {
         }
     }
 
-
     private fun retrievePlaylistAndSetAdapter() {
         playlist = arrayListOf()
         val postId = intent.getStringExtra("postId")
@@ -101,7 +140,7 @@ class PlaylistActivity : AppCompatActivity() {
         if (databaseRef != null) {
             databaseRef.addListenerForSingleValueEvent(object : ValueEventListener {
                 override fun onDataChange(snapshot: DataSnapshot) {
-                    for(list in snapshot.children){
+                    for (list in snapshot.children) {
                         val listData = list.getValue(PlaylistModel::class.java)
                         listData?.let {
                             playlist.add(it)
@@ -113,14 +152,12 @@ class PlaylistActivity : AppCompatActivity() {
                 override fun onCancelled(error: DatabaseError) {
                     Toast.makeText(this@PlaylistActivity, "Failed to retrieve playlist: ${error.message}", Toast.LENGTH_SHORT).show()
                 }
-
             })
         }
     }
 
     private fun setAdapter(playlist: ArrayList<PlaylistModel>) {
-        playlistAdapter = PlaylistAdapter(playlist){
-            position,videoUrl,size->
+        playlistAdapter = PlaylistAdapter(playlist) { position, videoUrl, size ->
             playPlaylistVideo(videoUrl)
         }
         binding.rvPlaylist.layoutManager = LinearLayoutManager(this)
@@ -130,57 +167,91 @@ class PlaylistActivity : AppCompatActivity() {
 
     private fun playIntroVideo(videoUrl: String) {
         try {
-            //create an ExoPlayer instance using ExoPlayer.Builder
+            // Create an ExoPlayer instance using ExoPlayer.Builder
             simpleExoPlayer = SimpleExoPlayer.Builder(this@PlaylistActivity).build()
+
             // Bind the player to the view.
             binding.videoPlayer.player = simpleExoPlayer
+
             // Build the media item.
             val mediaItem = MediaItem.fromUri(videoUrl)
+
             // Set the media item to be played.
             simpleExoPlayer.setMediaItem(mediaItem)
 
-            // Prepare the player (id you want to load the complete video first.
-//            simpleExoPlayer.prepare()
-            simpleExoPlayer.preparePlayer(binding.videoPlayer, true)
+            // Prepare the player (if you want to load the complete video first).
+            simpleExoPlayer.prepare()
+
 
             // Start the playback.
             simpleExoPlayer.playWhenReady = true
-            binding.videoPlayer.setShowBuffering(PlayerView.SHOW_BUFFERING_ALWAYS)
 
 
-        }catch (e:Exception){
+            simpleExoPlayer.next()
+
+            binding.videoPlayer.setShowBuffering(StyledPlayerView.SHOW_BUFFERING_ALWAYS)
+
+            // Synchronize the fullscreen button visibility with the ExoPlayer controls
+            binding.videoPlayer.setControllerVisibilityListener { visibility ->
+                binding.btnFullscreen.visibility = visibility
+            }
+
+        } catch (e: Exception) {
             showToast(e.localizedMessage)
         }
     }
 
     private fun playPlaylistVideo(videoUrl: String) {
         try {
-
-            if(!::simpleExoPlayer.isInitialized){
-                //create an ExoPlayer instance using ExoPlayer.Builder
+            if (!::simpleExoPlayer.isInitialized) {
+                // Create an ExoPlayer instance using ExoPlayer.Builder
                 simpleExoPlayer = SimpleExoPlayer.Builder(this@PlaylistActivity).build()
-
                 binding.videoPlayer.player = simpleExoPlayer
             }
 
             // Build the media item.
             val mediaItem = MediaItem.fromUri(videoUrl)
+
             // Set the media item to be played.
             simpleExoPlayer.setMediaItem(mediaItem)
 
-            // Prepare the player (id you want to load the complete video first).
-            simpleExoPlayer.preparePlayer(binding.videoPlayer, true)
+            // Prepare the player (if you want to load the complete video first).
+            simpleExoPlayer.prepare()
 
-            //play video
+            // Play video
             simpleExoPlayer.playWhenReady = true
 
+            binding.videoPlayer.setShowBuffering(StyledPlayerView.SHOW_BUFFERING_ALWAYS)
 
-            binding.videoPlayer.setShowBuffering(PlayerView.SHOW_BUFFERING_ALWAYS)
+            // Synchronize the fullscreen button visibility with the ExoPlayer controls
+            binding.videoPlayer.setControllerVisibilityListener { visibility ->
+                binding.btnFullscreen.visibility = visibility
+            }
 
 
-
-        }catch (e:Exception){
+        } catch (e: Exception) {
             showToast(e.localizedMessage)
+        }
+    }
+
+    override fun onConfigurationChanged(newConfig: Configuration) {
+        super.onConfigurationChanged(newConfig)
+        // Handle layout changes based on the new orientation
+        if (newConfig.orientation == Configuration.ORIENTATION_LANDSCAPE) {
+            // Handle landscape orientation changes
+        } else if (newConfig.orientation == Configuration.ORIENTATION_PORTRAIT) {
+            // Handle portrait orientation changes
+        }
+    }
+
+    override fun onBackPressed() {
+        // Check if the current orientation is landscape
+        if (resources.configuration.orientation == Configuration.ORIENTATION_LANDSCAPE) {
+            // Switch to portrait mode
+            toggleFullscreen()
+        } else {
+            // If already in portrait mode, proceed with normal back press
+            super.onBackPressed()
         }
     }
 
@@ -189,6 +260,8 @@ class PlaylistActivity : AppCompatActivity() {
         if (::simpleExoPlayer.isInitialized) {
             simpleExoPlayer.release()
         }
+        // Clean up the handler callbacks on destroy
+        handler.removeCallbacks(hideFullscreenButtonRunnable)
     }
 
     override fun onPause() {
@@ -196,20 +269,11 @@ class PlaylistActivity : AppCompatActivity() {
         if (::simpleExoPlayer.isInitialized) {
             simpleExoPlayer.playWhenReady = false
         }
+        // Remove callbacks when the activity is paused to avoid memory leaks
+        handler.removeCallbacks(hideFullscreenButtonRunnable)
     }
 
-
-    private fun showToast(message: String) {
-        Toast.makeText(this, message, Toast.LENGTH_SHORT).show()
-    }
-}
-
-
-class FullScreenVideoView(context: Context, attrs: AttributeSet) : VideoView(context, attrs) {
-
-    override fun onMeasure(widthMeasureSpec: Int, heightMeasureSpec: Int) {
-        val width = View.MeasureSpec.getSize(widthMeasureSpec)
-        val height = View.MeasureSpec.getSize(heightMeasureSpec)
-        setMeasuredDimension(width,height)
+    private fun showToast(msg: String) {
+        Toast.makeText(this@PlaylistActivity, msg, Toast.LENGTH_SHORT).show()
     }
 }
